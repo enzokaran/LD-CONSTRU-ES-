@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LD Engenharia e Serviços</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=Archivo+Expanded:wght@700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black:#0d1420;
+    --graphite:#141f30;
+    --concrete:#7d8b99;
+    --concrete-light:#c3cdd4;
+    --off-white:#edede6;
+    --green:#14304a;
+    --green-bright:#2e86ab;
+    --verde-detail:#4c7a57;
+    --line: rgba(237,237,230,0.14);
+    --line-dark: rgba(13,20,32,0.12);
+    --ease: cubic-bezier(.22,1,.36,1);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--black);
+    color:var(--off-white);
+    font-family:'Inter',sans-serif;
+    overflow-x:hidden;
+    cursor:default;
+  }
+  body.loading{overflow:hidden;}
+  h1,h2,h3,.display{
+    font-family:'Archivo Expanded','Archivo',sans-serif;
+    font-weight:800;
+    letter-spacing:-0.01em;
+    line-height:0.92;
+    text-transform:uppercase;
+  }
+  .mono-label{
+    font-family:'Archivo',sans-serif;
+    font-weight:600;
+    font-size:0.72rem;
+    letter-spacing:0.12em;
+    color:var(--concrete);
+    display:inline-flex; align-items:center;
+  }
+  .status-dot{display:inline-block; width:6px; height:6px; background:var(--verde-detail); margin-right:9px; flex-shrink:0;}
+  a{color:inherit;text-decoration:none;}
+  img{display:block;max-width:100%;}
+  ::selection{background:var(--green);color:var(--off-white);}
+  .accent{color:var(--green-bright);}
+  .wrap{max-width:1400px;margin:0 auto;padding:0 48px;}
+  @media(max-width:768px){.wrap{padding:0 22px;}}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.01ms !important; transition-duration:0.01ms !important; scroll-behavior:auto !important;}
+  }
+
+  /* ---------- LOADER ---------- */
+  .loader{position:fixed; inset:0; z-index:500; background:var(--black); display:flex; align-items:center; justify-content:center; transition:transform 1s var(--ease);}
+  .loader.leave{transform:translateY(-100%);}
+  .loader-mark{font-family:'Archivo Expanded',sans-serif; font-weight:800; font-size:1.05rem; letter-spacing:0.05em; text-transform:uppercase; color:var(--off-white); opacity:0; transition:opacity .7s ease; text-align:center;}
+  .loader-mark.show{opacity:1;}
+  .loader-mark span{display:block; font-family:'Inter',sans-serif; font-weight:400; font-size:0.62rem; letter-spacing:0.16em; color:var(--concrete-light); margin-top:8px; text-transform:uppercase;}
+
+  /* ---------- GRAIN ---------- */
+  .grain{position:fixed; inset:0; z-index:90; pointer-events:none; opacity:0.035; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size:140px 140px;
+  }
+
+  /* ---------- NAVBAR ---------- */
+  header.nav{
+    position:fixed; top:0; left:0; width:100%; z-index:200;
+    display:flex; justify-content:space-between; align-items:flex-start;
+    padding:28px 48px;
+    mix-blend-mode:difference;
+    transition:padding .4s var(--ease), background-color .4s var(--ease);
+  }
+  header.nav.scrolled{padding:18px 48px; background:rgba(13,20,32,0.78); backdrop-filter:blur(10px); mix-blend-mode:normal; border-bottom:1px solid var(--line);}
+  @media(max-width:768px){header.nav{padding:20px 22px;} header.nav.scrolled{padding:16px 22px;}}
+  .brand{
+    font-family:'Archivo Expanded',sans-serif;
+    font-weight:800; font-size:0.95rem; letter-spacing:0.04em;
+    line-height:1.15; text-transform:uppercase;
+  }
+  .brand span{display:block; font-family:'Inter',sans-serif; font-weight:400; font-size:0.62rem; letter-spacing:0.14em; color:var(--concrete-light); text-transform:uppercase; margin-top:3px;}
+  header.nav.scrolled .brand span{color:var(--concrete-light);}
+  .menu-btn{
+    background:none;border:none;color:var(--off-white);
+    font-family:'Archivo',sans-serif; font-weight:600; font-size:0.78rem;
+    letter-spacing:0.14em; text-transform:uppercase; cursor:pointer;
+    display:flex; align-items:center; gap:10px;
+  }
+  .menu-btn .plus{font-size:1.1rem; font-weight:400; transition:transform .5s var(--ease);}
+  .menu-btn.open .plus{transform:rotate(45deg);}
+
+  /* ---------- FULLSCREEN MENU ---------- */
+  .menu-overlay{
+    position:fixed; inset:0; z-index:150;
+    background:var(--black);
+    clip-path: inset(0 0 100% 0);
+    transition: clip-path .85s var(--ease);
+    display:flex; flex-direction:column; justify-content:center;
+  }
+  .menu-overlay.active{clip-path: inset(0 0 0% 0);}
+  .menu-list{ width:100%; padding:0 48px;}
+  @media(max-width:768px){.menu-list{padding:0 22px;}}
+  .menu-item{
+    display:flex; align-items:baseline; gap:28px;
+    padding:20px 0; border-bottom:1px solid var(--line);
+    overflow:hidden; position:relative;
+  }
+  .menu-item .num{font-family:'Archivo',sans-serif; font-size:0.85rem; color:var(--green-bright); font-weight:600;}
+  .menu-item .label{
+    font-family:'Archivo Expanded',sans-serif; font-weight:800;
+    font-size:clamp(2.2rem,7vw,5rem); text-transform:uppercase;
+    letter-spacing:-0.01em; transition: transform .5s var(--ease), color .5s var(--ease);
+    display:inline-block;
+  }
+  .menu-item:hover .label{transform:translateX(18px); color:var(--green-bright);}
+  .menu-preview{
+    position:absolute; right:60px; top:50%; width:220px; height:150px;
+    transform:translateY(-50%) scale(0.9); opacity:0; pointer-events:none;
+    background-size:cover; background-position:center; transition:opacity .4s var(--ease), transform .5s var(--ease);
+  }
+  .menu-item:hover .menu-preview{opacity:1; transform:translateY(-50%) scale(1);}
+  @media(max-width:900px){.menu-preview{display:none;}}
+  .menu-foot{padding:32px 48px; display:flex; justify-content:space-between; font-family:'Archivo',sans-serif; font-size:0.7rem; letter-spacing:0.1em; color:var(--concrete); text-transform:uppercase;}
+  @media(max-width:768px){.menu-foot{padding:20px 22px; flex-direction:column; gap:8px;}}
+
+  /* ---------- HERO ---------- */
+  section.hero{
+    position:relative; min-height:100vh; display:flex; flex-direction:column;
+    padding-top:150px; padding-bottom:40px;
+  }
+  .hero-grid{
+    flex:1; display:grid; grid-template-columns: 1.1fr 1.4fr;
+    gap:40px; align-items:end; padding:0 48px;
+  }
+  @media(max-width:900px){.hero-grid{grid-template-columns:1fr; gap:28px; padding:0 22px;}}
+  .hero-title{
+    font-size:clamp(3.2rem,8vw,7.4rem);
+  }
+  .hero-title .line{overflow:hidden; display:block;}
+  .hero-title .line span{display:block; transform:translateY(110%); transition:transform 1s cubic-bezier(.22,1,.36,1);}
+  .hero-title .line:nth-child(2) span{color:var(--concrete-light);}
+  .hero-sub{margin-top:26px; max-width:340px; color:var(--concrete-light); font-size:0.98rem; line-height:1.6;}
+  .hero-image{
+    position:relative; aspect-ratio:4/5; overflow:hidden;
+    clip-path: inset(100% 0 0 0);
+    transition: clip-path 1.4s var(--ease), transform .1s linear;
+    will-change:transform;
+  }
+  .hero-image.reveal{clip-path: inset(0 0 0 0);}
+  .hero-image img{width:100%;height:100%;object-fit:cover; transform:scale(1.15); transition:transform 1.6s var(--ease);}
+  .hero-image.reveal img{transform:scale(1);}
+  .hero-image::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg, rgba(13,20,32,0) 55%, rgba(13,20,32,0.6) 100%);pointer-events:none;}
+  .frame{position:absolute; width:22px; height:22px; opacity:.6; pointer-events:none; z-index:2;}
+  .frame.tl{top:14px;left:14px;border-top:1.5px solid var(--off-white);border-left:1.5px solid var(--off-white);}
+  .frame.tr{top:14px;right:14px;border-top:1.5px solid var(--off-white);border-right:1.5px solid var(--off-white);}
+  .frame.bl{bottom:14px;left:14px;border-bottom:1.5px solid var(--off-white);border-left:1.5px solid var(--off-white);}
+  .frame.br{bottom:14px;right:14px;border-bottom:1.5px solid var(--off-white);border-right:1.5px solid var(--off-white);}
+  .hero-coord{position:absolute; bottom:16px; left:16px; font-family:'Archivo',sans-serif; font-size:0.65rem; letter-spacing:0.08em; color:var(--off-white); z-index:2;}
+  .scroll-cue{
+    margin:0 48px; padding-top:36px; border-top:1px solid var(--line);
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  @media(max-width:768px){.scroll-cue{margin:0 22px;}}
+  .scroll-line{position:relative; width:1px; height:28px; background:var(--line); overflow:hidden;}
+  .scroll-line::after{content:'';position:absolute;top:-100%;left:0;width:100%;height:100%;background:var(--green-bright);animation:scrollLine 1.8s ease-in-out infinite;}
+  @keyframes scrollLine{0%{top:-100%;}100%{top:100%;}}
+
+  /* ---------- SECTION SHELL ---------- */
+  section{position:relative;}
+  .section-pad{padding:150px 0;}
+  @media(max-width:768px){.section-pad{padding:100px 0;}}
+  .divider{height:1px; background:var(--line); width:100%;}
+
+  /* ---------- MARQUEE ---------- */
+  .marquee-band{overflow:hidden; padding:26px 0; background:var(--graphite); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+  .marquee-track{display:flex; width:max-content; gap:28px; animation:marquee 28s linear infinite;}
+  .marquee-track span{font-family:'Archivo Expanded',sans-serif; font-weight:800; text-transform:uppercase; font-size:clamp(1.5rem,3.8vw,2.5rem); color:var(--off-white); white-space:nowrap;}
+  .marquee-track span.dot{color:var(--green-bright); font-weight:400;}
+  @keyframes marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+  /* ---------- ABOUT ---------- */
+  .about-grid{display:grid; grid-template-columns:1.3fr 1fr; gap:60px;}
+  @media(max-width:900px){.about-grid{grid-template-columns:1fr; gap:44px;}}
+  .about-title{font-size:clamp(2.4rem,5.6vw,4.4rem); position:relative; padding-left:26px;}
+  .about-title::before{content:'';position:absolute;left:0;top:6px;bottom:6px;width:2px;background:var(--green-bright);}
+  .about-copy{color:var(--concrete-light); font-size:1.02rem; line-height:1.7; max-width:480px; margin-top:28px;}
+  .stat-row{display:flex; flex-direction:column; gap:0; margin-top:8px;}
+  .stat{padding:26px 0; border-top:1px solid var(--line); display:flex; justify-content:space-between; align-items:baseline;}
+  .stat:last-child{border-bottom:1px solid var(--line);}
+  .stat .num{font-family:'Archivo Expanded',sans-serif; font-weight:800; font-size:clamp(2.4rem,4.5vw,3.6rem); color:var(--off-white);}
+  .stat .label{font-size:0.78rem; letter-spacing:0.06em; color:var(--concrete); text-transform:uppercase; max-width:130px; text-align:right;}
+
+  /* ---------- SERVICES ---------- */
+  .services-head{display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:20px;}
+  .services-head h2{font-size:clamp(2.4rem,5.6vw,4.4rem);}
+  .service-row{
+    border-top:1px solid var(--line);
+    display:grid; grid-template-columns: 90px 1fr 40px;
+    align-items:center; gap:20px;
+    padding:34px 0; cursor:pointer; position:relative; overflow:hidden;
+  }
+  .service-row:last-child{border-bottom:1px solid var(--line);}
+  .service-row::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--green-bright);transform:scaleY(0);transform-origin:top;transition:transform .5s var(--ease);}
+  .service-row.active::before{transform:scaleY(1);}
+  .service-row .ghost-num{position:absolute; right:0; top:50%; transform:translateY(-50%); font-family:'Archivo Expanded',sans-serif; font-weight:800; font-size:7rem; line-height:1; color:var(--off-white); opacity:0.035; pointer-events:none; user-select:none; z-index:0;}
+  .service-row .num{font-family:'Archivo',sans-serif; color:var(--concrete); font-size:0.85rem; position:relative; z-index:1;}
+  .service-row .name{
+    font-family:'Archivo Expanded',sans-serif; font-weight:800; text-transform:uppercase;
+    font-size:clamp(1.7rem,4.6vw,3.2rem); letter-spacing:-0.01em;
+    transition: color .4s var(--ease), transform .4s var(--ease);
+    position:relative; z-index:1; display:inline-block;
+  }
+  .service-row .desc{grid-column:2; font-size:0.9rem; color:var(--concrete-light); max-width:460px; max-height:0; overflow:hidden; opacity:0; transition: max-height .5s var(--ease), opacity .4s var(--ease), margin .4s var(--ease); position:relative; z-index:1;}
+  .service-row.active .desc{max-height:80px; opacity:1; margin-top:10px;}
+  .service-row .arrow{justify-self:end; font-size:1.4rem; color:var(--concrete); transition:transform .4s var(--ease), color .4s var(--ease); position:relative; z-index:1;}
+  .service-row.active .name{color:var(--green-bright); transform:translateX(6px);}
+  .service-row.active .arrow{transform:rotate(45deg); color:var(--green-bright);}
+  .service-visual{
+    position:fixed; top:0; right:0; width:38vw; height:100vh; z-index:5;
+    pointer-events:none; opacity:0; transition:opacity .6s var(--ease);
+    overflow:hidden;
+  }
+  .service-visual.on{opacity:1;}
+  .service-visual::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg, rgba(13,20,32,0.15) 0%, rgba(13,20,32,0.05) 40%, rgba(13,20,32,0.35) 100%);}
+  .service-visual img{width:100%; height:100%; object-fit:cover; opacity:0; transform:scale(1.08); transition:opacity .8s var(--ease), transform 1.2s var(--ease);}
+  .service-visual img.show{opacity:1; transform:scale(1);}
+  @media(max-width:1100px){.service-visual{display:none;} .service-row{grid-template-columns:60px 1fr 30px;}}
+  .service-thumb-mobile{display:none; width:100%; aspect-ratio:16/9; overflow:hidden; margin-top:14px; position:relative; z-index:1;}
+  .service-thumb-mobile img{width:100%;height:100%;object-fit:cover;}
+  @media(max-width:1100px){.service-row.active .service-thumb-mobile{display:block;}}
+
+  /* ---------- PROJECTS ---------- */
+  .projects-head{display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:70px;}
+  .projects-head h2{font-size:clamp(2.4rem,5.6vw,4.4rem);}
+  .project-item{margin-bottom:130px;}
+  .project-item:last-child{margin-bottom:0;}
+  .project-media{overflow:hidden; position:relative; clip-path:inset(6% 0 6% 0); transition:clip-path 1.1s var(--ease); cursor:pointer;}
+  .project-media.reveal{clip-path:inset(0 0 0 0);}
+  .project-media img{width:100%; object-fit:cover; transform:scale(1.1); transition:transform 1.3s var(--ease);}
+  .project-media.reveal img{transform:scale(1);}
+  .project-media.reveal:hover img{transform:scale(1.05);}
+  .project-item:nth-child(odd) .project-media{width:78%; aspect-ratio:16/10;}
+  .project-item:nth-child(even) .project-media{width:60%; aspect-ratio:3/4; margin-left:auto;}
+  @media(max-width:900px){.project-item:nth-child(odd) .project-media, .project-item:nth-child(even) .project-media{width:100%; aspect-ratio:4/3;}}
+  .project-meta{display:flex; justify-content:space-between; align-items:flex-end; margin-top:22px; padding-top:16px; border-top:1px solid var(--line);}
+  .project-meta .info .idx{font-size:0.7rem; letter-spacing:0.1em; color:var(--concrete); margin-bottom:8px;}
+  .project-meta .info .title{font-family:'Archivo Expanded',sans-serif; font-weight:800; text-transform:uppercase; font-size:clamp(1.3rem,2.6vw,1.9rem);}
+  .project-meta .year{font-family:'Archivo',sans-serif; font-size:0.85rem; color:var(--concrete);}
+  .cursor-tag{position:fixed; z-index:300; padding:11px 18px; background:var(--off-white); color:var(--black); font-family:'Archivo',sans-serif; font-weight:600; font-size:0.7rem; letter-spacing:0.08em; text-transform:uppercase; border-radius:999px; opacity:0; transform:translate(-50%,-50%) scale(.8); transition:opacity .25s var(--ease), transform .25s var(--ease); pointer-events:none;}
+  .cursor-tag.show{opacity:1; transform:translate(-50%,-50%) scale(1);}
+  @media(hover:none){.cursor-tag{display:none;}}
+
+  /* ---------- CTA / FOOTER ---------- */
+  footer{background:var(--off-white); color:var(--black); padding-top:130px;}
+  .cta-title{font-size:clamp(3rem,9vw,7.5rem); padding:0 48px;}
+  @media(max-width:768px){.cta-title{padding:0 22px;}}
+  .cta-link{
+    display:inline-flex; align-items:center; gap:16px; margin:44px 48px 110px;
+    font-family:'Archivo',sans-serif; font-weight:600; font-size:1rem;
+    letter-spacing:0.04em; text-transform:uppercase; border-bottom:2px solid var(--black); padding-bottom:6px;
+  }
+  @media(max-width:768px){.cta-link{margin:36px 22px 90px;}}
+  .footer-bottom{border-top:1px solid var(--line-dark); padding:36px 48px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:24px;}
+  @media(max-width:768px){.footer-bottom{padding:26px 22px; flex-direction:column;}}
+  .footer-col .title{font-family:'Archivo Expanded',sans-serif; font-weight:800; text-transform:uppercase; font-size:0.9rem; margin-bottom:8px;}
+  .footer-col .sub{font-size:0.78rem; color:#5a5a55;}
+  .footer-links{display:flex; gap:26px; font-family:'Archivo',sans-serif; font-size:0.75rem; letter-spacing:0.06em; text-transform:uppercase;}
+  .footer-links a{position:relative;}
+  .footer-links a::after{content:'';position:absolute;left:0;bottom:-3px;width:100%;height:1px;background:var(--black);transform:scaleX(0);transform-origin:right;transition:transform .35s var(--ease);}
+  .footer-links a:hover::after{transform:scaleX(1);transform-origin:left;}
+
+  .reveal-up{opacity:0; transform:translateY(36px); transition:opacity .9s var(--ease), transform .9s var(--ease);}
+  .reveal-up.in{opacity:1; transform:translateY(0);}
+</style>
+</head>
+<body class="loading">
+
+<div class="loader" id="loader" aria-hidden="true">
+  <div class="loader-mark" id="loaderMark">LD<span>Engenharia e Serviços</span></div>
+</div>
+<div class="grain" aria-hidden="true"></div>
+<div class="cursor-tag" id="cursorTag">Ver projeto</div>
+
+<header class="nav" id="siteNav">
+  <div class="brand">LD<span>Engenharia e Serviços</span></div>
+  <button class="menu-btn" id="menuBtn"><span>Menu</span><span class="plus">+</span></button>
+</header>
+
+<div class="menu-overlay" id="menuOverlay">
+  <nav class="menu-list">
+    <a class="menu-item" data-target="#hero"><span class="num">01</span><span class="label">Início</span>
+      <div class="menu-preview" style="background-image:url('https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=600&q=80')"></div>
+    </a>
+    <a class="menu-item" data-target="#empresa"><span class="num">02</span><span class="label">A empresa</span>
+      <div class="menu-preview" style="background-image:url('https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=600&q=80')"></div>
+    </a>
+    <a class="menu-item" data-target="#servicos"><span class="num">03</span><span class="label">Serviços</span>
+      <div class="menu-preview" style="background-image:url('https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=600&q=80')"></div>
+    </a>
+    <a class="menu-item" data-target="#projetos"><span class="num">04</span><span class="label">Projetos</span>
+      <div class="menu-preview" style="background-image:url('https://images.unsplash.com/photo-1541976590-713941681591?w=600&q=80')"></div>
+    </a>
+    <a class="menu-item" data-target="#contato"><span class="num">05</span><span class="label">Contato</span>
+      <div class="menu-preview" style="background-image:url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&q=80')"></div>
+    </a>
+  </nav>
+  <div class="menu-foot"><span>LD Engenharia — SC, Brasil</span><span>contato@ldengenharia.com.br</span></div>
+</div>
+
+<section class="hero" id="hero">
+  <div class="hero-grid">
+    <div>
+      <h1 class="hero-title">
+        <span class="line"><span>Engenharia</span></span>
+        <span class="line"><span>que entrega.</span></span>
+      </h1>
+      <p class="hero-sub reveal-up">Projetos, execução e manutenção com precisão técnica — do planejamento à entrega, cada etapa conduzida com rigor de engenharia.</p>
+    </div>
+    <div class="hero-image" id="heroImg">
+      <img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=2000&q=85" alt="Obra de engenharia" fetchpriority="high">
+      <span class="frame tl"></span><span class="frame tr"></span><span class="frame bl"></span><span class="frame br"></span>
+      <div class="hero-coord">27°58'00"S · 48°40'00"W</div>
+    </div>
+  </div>
+  <div class="scroll-cue">
+    <span class="mono-label"><span class="status-dot"></span>Role para explorar</span>
+    <span class="scroll-line"></span>
+  </div>
+</section>
+
+<div class="wrap">
+  <section class="section-pad" id="empresa">
+    <div class="about-grid">
+      <div>
+        <h2 class="about-title reveal-up">Nós não apenas construímos.</h2>
+        <p class="about-copy reveal-up">A LD Engenharia e Serviços atua em projetos civis, elétricos e de manutenção com uma premissa simples: cada obra carrega a responsabilidade de quem vai usá-la todos os dias. Por isso, planejamento técnico e execução caminham juntos, do primeiro estudo ao último acabamento.</p>
+      </div>
+      <div class="stat-row reveal-up">
+        <div class="stat"><span class="num">120+</span><span class="label">Projetos entregues</span></div>
+        <div class="stat"><span class="num">85+</span><span class="label">Clientes atendidos</span></div>
+        <div class="stat"><span class="num">14</span><span class="label">Anos de atuação</span></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="marquee-band" aria-hidden="true">
+  <div class="marquee-track">
+    <span>Precisão</span><span class="dot">—</span><span>Estrutura</span><span class="dot">—</span><span>Técnica</span><span class="dot">—</span><span>Confiança</span><span class="dot">—</span><span>Execução</span><span class="dot">—</span>
+    <span>Precisão</span><span class="dot">—</span><span>Estrutura</span><span class="dot">—</span><span>Técnica</span><span class="dot">—</span><span>Confiança</span><span class="dot">—</span><span>Execução</span><span class="dot">—</span>
+  </div>
+</div>
+
+<div class="wrap">
+  <section class="section-pad" id="servicos">
+    <div class="services-head reveal-up">
+      <h2>Serviços</h2>
+      <span class="mono-label"><span class="status-dot"></span>Área de atuação / 04</span>
+    </div>
+
+    <div class="service-row active" data-img="https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=1400&q=82">
+      <span class="ghost-num">01</span>
+      <span class="num">01</span>
+      <div>
+        <span class="name">Engenharia civil</span>
+        <p class="desc">Projetos estruturais, acompanhamento de obra e gestão técnica completa, com foco em segurança e cronograma.</p>
+        <div class="service-thumb-mobile"><img src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=900&q=80" loading="lazy"></div>
+      </div>
+      <span class="arrow">→</span>
+    </div>
+
+    <div class="service-row" data-img="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=1400&q=82">
+      <span class="ghost-num">02</span>
+      <span class="num">02</span>
+      <div>
+        <span class="name">Instalações elétricas</span>
+        <p class="desc">Projetos e execuções elétricas de baixa e média tensão, com laudos e adequação às normas vigentes.</p>
+        <div class="service-thumb-mobile"><img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=900&q=80" loading="lazy"></div>
+      </div>
+      <span class="arrow">→</span>
+    </div>
+
+    <div class="service-row" data-img="https://images.unsplash.com/photo-1541976590-713941681591?w=1400&q=82">
+      <span class="ghost-num">03</span>
+      <span class="num">03</span>
+      <div>
+        <span class="name">Construção e reformas</span>
+        <p class="desc">Execução de obras residenciais, comerciais e industriais, do canteiro à entrega das chaves.</p>
+        <div class="service-thumb-mobile"><img src="https://images.unsplash.com/photo-1541976590-713941681591?w=900&q=80" loading="lazy"></div>
+      </div>
+      <span class="arrow">→</span>
+    </div>
+
+    <div class="service-row" data-img="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=1400&q=82">
+      <span class="ghost-num">04</span>
+      <span class="num">04</span>
+      <div>
+        <span class="name">Poda e manutenção</span>
+        <p class="desc">Serviços de manutenção predial e paisagística, mantendo a segurança e a conservação dos espaços.</p>
+        <div class="service-thumb-mobile"><img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=900&q=80" loading="lazy"></div>
+      </div>
+      <span class="arrow">→</span>
+    </div>
+  </section>
+</div>
+
+<div class="service-visual" id="serviceVisual">
+  <img src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=1400&q=82" class="show" data-active>
+  <img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=1400&q=82">
+  <img src="https://images.unsplash.com/photo-1541976590-713941681591?w=1400&q=82">
+  <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=1400&q=82">
+</div>
+
+<div class="divider"></div>
+
+<div class="wrap">
+  <section class="section-pad" id="projetos">
+    <div class="projects-head reveal-up">
+      <h2>Projetos<br>selecionados.</h2>
+      <span class="mono-label"><span class="status-dot"></span>Status / concluídos</span>
+    </div>
+
+    <div class="project-item">
+      <div class="project-media"><img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1800&q=82" loading="lazy"></div>
+      <div class="project-meta">
+        <div class="info"><div class="idx">Projeto — 01 · Residencial</div><div class="title">Residencial Santa Catarina</div></div>
+        <span class="year">2026</span>
+      </div>
+    </div>
+
+    <div class="project-item">
+      <div class="project-media"><img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1400&q=82" loading="lazy"></div>
+      <div class="project-meta">
+        <div class="info"><div class="idx">Projeto — 02 · Industrial</div><div class="title">Galpão logístico São José</div></div>
+        <span class="year">2025</span>
+      </div>
+    </div>
+
+    <div class="project-item">
+      <div class="project-media"><img src="https://images.unsplash.com/photo-1493397212122-2b85dda8106b?w=1800&q=82" loading="lazy"></div>
+      <div class="project-meta">
+        <div class="info"><div class="idx">Projeto — 03 · Comercial</div><div class="title">Centro empresarial Norte</div></div>
+        <span class="year">2025</span>
+      </div>
+    </div>
+  </section>
+</div>
+
+<footer id="contato">
+  <div class="wrap">
+    <h2 class="cta-title reveal-up" style="padding:0;">Vamos<br>construir<br>algo?</h2>
+    <a href="mailto:contato@ldengenharia.com.br" class="cta-link reveal-up">Iniciar conversa →</a>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-col">
+      <div class="title">LD Engenharia e Serviços</div>
+      <div class="sub">Santa Catarina — Brasil</div>
+    </div>
+    <div class="footer-links">
+      <a href="#">Instagram</a>
+      <a href="#">WhatsApp</a>
+      <a href="#">Email</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Loader / intro sequence
+  const loader = document.getElementById('loader');
+  const loaderMark = document.getElementById('loaderMark');
+  const heroImg = document.getElementById('heroImg');
+  function playIntro(){
+    requestAnimationFrame(()=> loaderMark.classList.add('show'));
+    setTimeout(()=>{
+      loader.classList.add('leave');
+      document.body.classList.remove('loading');
+      heroImg.classList.add('reveal');
+      document.querySelectorAll('.hero-title .line span').forEach((el,i)=>{
+        el.style.transitionDelay = (0.1 + i*0.12)+'s';
+        requestAnimationFrame(()=> el.style.transform = 'translateY(0)');
+      });
+    }, 850);
+    setTimeout(()=>{ if(loader) loader.remove(); }, 1900);
+  }
+  if(document.readyState === 'complete'){ playIntro(); }
+  else { window.addEventListener('load', playIntro); }
+
+  // Menu toggle
+  const menuBtn = document.getElementById('menuBtn');
+  const menuOverlay = document.getElementById('menuOverlay');
+  menuBtn.addEventListener('click', () => {
+    menuOverlay.classList.toggle('active');
+    menuBtn.classList.toggle('open');
+  });
+  document.querySelectorAll('.menu-item').forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
+      const target = document.querySelector(item.dataset.target);
+      menuOverlay.classList.remove('active');
+      menuBtn.classList.remove('open');
+      setTimeout(() => target.scrollIntoView({behavior:'smooth'}), 400);
+    });
+  });
+
+  // Scroll reveal via IntersectionObserver
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('in');
+        if(entry.target.classList.contains('project-media')) entry.target.classList.add('reveal');
+      }
+    });
+  }, {threshold:0.18});
+  document.querySelectorAll('.reveal-up, .project-media').forEach(el => io.observe(el));
+
+  // Services interactive
+  const rows = document.querySelectorAll('.service-row');
+  const visualWrap = document.getElementById('serviceVisual');
+  const visualImgs = visualWrap.querySelectorAll('img');
+  function activateRow(row){
+    rows.forEach(r => r.classList.remove('active'));
+    row.classList.add('active');
+    const img = row.dataset.img;
+    visualImgs.forEach(im => im.classList.toggle('show', im.src === img));
+  }
+  rows.forEach(row => {
+    row.addEventListener('mouseenter', () => { if(window.innerWidth>1100) activateRow(row); });
+    row.addEventListener('click', () => activateRow(row));
+  });
+  const servicesSection = document.getElementById('servicos');
+  const io2 = new IntersectionObserver((entries)=>{
+    entries.forEach(e => visualWrap.classList.toggle('on', e.isIntersecting && window.innerWidth>1100));
+  }, {threshold:0.1});
+  io2.observe(servicesSection);
+
+  // Cursor tag on projects (desktop)
+  const cursorTag = document.getElementById('cursorTag');
+  document.querySelectorAll('.project-media').forEach(el => {
+    el.addEventListener('mousemove', e => {
+      cursorTag.style.left = e.clientX + 'px';
+      cursorTag.style.top = e.clientY + 'px';
+    });
+    el.addEventListener('mouseenter', () => cursorTag.classList.add('show'));
+    el.addEventListener('mouseleave', () => cursorTag.classList.remove('show'));
+  });
+
+  // Nav scroll state + hero parallax
+  const nav = document.getElementById('siteNav');
+  let ticking = false;
+  function onScroll(){
+    if(!ticking){
+      requestAnimationFrame(()=>{
+        const y = window.scrollY;
+        nav.classList.toggle('scrolled', y > 60);
+        heroImg.style.transform = 'translateY(' + Math.min(y*0.05, 60) + 'px)';
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+</script>
+
+</body>
+</html>
