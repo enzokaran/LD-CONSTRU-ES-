@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LD Engenharia e Serviços</title>
+<title>⚠️ SITE DE TESTE — Construção SC (não é uma empresa real)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=Archivo+Expanded:wght@700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
@@ -58,6 +58,18 @@
     *{animation-duration:0.01ms !important; transition-duration:0.01ms !important; scroll-behavior:auto !important;}
   }
 
+  /* ---------- FAIXA DE AVISO: SITE DE TESTE ---------- */
+  .test-banner{
+    position:fixed; top:0; left:0; width:100%; z-index:600;
+    background:#c0392b; color:#fff;
+    font-family:'Archivo',sans-serif; font-weight:700;
+    font-size:0.72rem; letter-spacing:0.06em; text-transform:uppercase;
+    text-align:center; padding:8px 12px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.3);
+  }
+  @media(max-width:768px){.test-banner{font-size:0.62rem; padding:7px 10px;}}
+  body{padding-top:34px;}
+
   /* ---------- LOADER ---------- */
   .loader{position:fixed; inset:0; z-index:500; background:var(--black); display:flex; align-items:center; justify-content:center; transition:transform 1s var(--ease);}
   .loader.leave{transform:translateY(-100%);}
@@ -73,7 +85,7 @@
 
   /* ---------- NAVBAR ---------- */
   header.nav{
-    position:fixed; top:0; left:0; width:100%; z-index:200;
+    position:fixed; top:34px; left:0; width:100%; z-index:200;
     display:flex; justify-content:space-between; align-items:flex-start;
     padding:28px 48px;
     mix-blend-mode:difference;
@@ -283,14 +295,16 @@
 </head>
 <body class="loading">
 
+<div class="test-banner">⚠️ SITE DE TESTE — Este é apenas um modelo de demonstração. Não é uma empresa real. ⚠️</div>
+
 <div class="loader" id="loader" aria-hidden="true">
-  <div class="loader-mark" id="loaderMark">LD<span>Engenharia e Serviços</span></div>
+  <div class="loader-mark" id="loaderMark">TESTE<span>Site de demonstração — não real</span></div>
 </div>
 <div class="grain" aria-hidden="true"></div>
 <div class="cursor-tag" id="cursorTag">Ver projeto</div>
 
 <header class="nav" id="siteNav">
-  <div class="brand">LD<span>Engenharia e Serviços</span></div>
+  <div class="brand">TESTE SC<span>Site de teste — não é real</span></div>
   <button class="menu-btn" id="menuBtn"><span>Menu</span><span class="plus">+</span></button>
 </header>
 
@@ -312,17 +326,17 @@
       <div class="menu-preview" style="background-image:url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&q=80')"></div>
     </a>
   </nav>
-  <div class="menu-foot"><span>LD Engenharia — SC, Brasil</span><span>contato@ldengenharia.com.br</span></div>
+  <div class="menu-foot"><span>⚠️ SITE DE TESTE — SC, Brasil</span><span>teste@exemplo.com.br (não real)</span></div>
 </div>
 
 <section class="hero" id="hero">
   <div class="hero-grid">
     <div>
       <h1 class="hero-title">
-        <span class="line"><span>Engenharia</span></span>
-        <span class="line"><span>que entrega.</span></span>
+        <span class="line"><span>Site de teste</span></span>
+        <span class="line"><span>não é real.</span></span>
       </h1>
-      <p class="hero-sub reveal-up">Projetos, execução e manutenção com precisão técnica — do planejamento à entrega, cada etapa conduzida com rigor de engenharia.</p>
+      <p class="hero-sub reveal-up">⚠️ Este site foi criado apenas para fins de teste/demonstração de construção civil em SC. Nenhuma informação aqui representa uma empresa real.</p>
     </div>
     <div class="hero-image" id="heroImg">
       <img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=2000&q=85" alt="Obra de engenharia" fetchpriority="high">
@@ -340,13 +354,13 @@
   <section class="section-pad" id="empresa">
     <div class="about-grid">
       <div>
-        <h2 class="about-title reveal-up">Nós não apenas construímos.</h2>
-        <p class="about-copy reveal-up">A LD Engenharia e Serviços atua em projetos civis, elétricos e de manutenção com uma premissa simples: cada obra carrega a responsabilidade de quem vai usá-la todos os dias. Por isso, planejamento técnico e execução caminham juntos, do primeiro estudo ao último acabamento.</p>
+        <h2 class="about-title reveal-up">⚠️ Conteúdo de teste.</h2>
+        <p class="about-copy reveal-up">Este é um site de TESTE sobre construção civil em Santa Catarina, criado apenas para fins de demonstração/desenvolvimento. Nenhuma empresa, obra, cliente ou dado apresentado aqui é real.</p>
       </div>
       <div class="stat-row reveal-up">
-        <div class="stat"><span class="num">120+</span><span class="label">Projetos entregues</span></div>
-        <div class="stat"><span class="num">85+</span><span class="label">Clientes atendidos</span></div>
-        <div class="stat"><span class="num">14</span><span class="label">Anos de atuação</span></div>
+        <div class="stat"><span class="num">0</span><span class="label">Dados fictícios (teste)</span></div>
+        <div class="stat"><span class="num">0</span><span class="label">Clientes reais</span></div>
+        <div class="stat"><span class="num">100%</span><span class="label">Conteúdo de teste</span></div>
       </div>
     </div>
   </section>
@@ -354,24 +368,24 @@
 
 <div class="marquee-band" aria-hidden="true">
   <div class="marquee-track">
-    <span>Precisão</span><span class="dot">—</span><span>Estrutura</span><span class="dot">—</span><span>Técnica</span><span class="dot">—</span><span>Confiança</span><span class="dot">—</span><span>Execução</span><span class="dot">—</span>
-    <span>Precisão</span><span class="dot">—</span><span>Estrutura</span><span class="dot">—</span><span>Técnica</span><span class="dot">—</span><span>Confiança</span><span class="dot">—</span><span>Execução</span><span class="dot">—</span>
+    <span>Teste</span><span class="dot">—</span><span>Demonstração</span><span class="dot">—</span><span>Não real</span><span class="dot">—</span><span>Teste</span><span class="dot">—</span><span>Exemplo</span><span class="dot">—</span>
+    <span>Teste</span><span class="dot">—</span><span>Demonstração</span><span class="dot">—</span><span>Não real</span><span class="dot">—</span><span>Teste</span><span class="dot">—</span><span>Exemplo</span><span class="dot">—</span>
   </div>
 </div>
 
 <div class="wrap">
   <section class="section-pad" id="servicos">
     <div class="services-head reveal-up">
-      <h2>Serviços</h2>
-      <span class="mono-label"><span class="status-dot"></span>Área de atuação / 04</span>
+      <h2>Serviços (teste)</h2>
+      <span class="mono-label"><span class="status-dot"></span>⚠️ Exemplo fictício / 04</span>
     </div>
 
     <div class="service-row active" data-img="https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=1400&q=82">
       <span class="ghost-num">01</span>
       <span class="num">01</span>
       <div>
-        <span class="name">Engenharia civil</span>
-        <p class="desc">Projetos estruturais, acompanhamento de obra e gestão técnica completa, com foco em segurança e cronograma.</p>
+        <span class="name">Engenharia civil (teste)</span>
+        <p class="desc">⚠️ Texto de exemplo para teste. Não representa um serviço real oferecido por qualquer empresa.</p>
         <div class="service-thumb-mobile"><img src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=900&q=80" loading="lazy"></div>
       </div>
       <span class="arrow">→</span>
@@ -381,8 +395,8 @@
       <span class="ghost-num">02</span>
       <span class="num">02</span>
       <div>
-        <span class="name">Instalações elétricas</span>
-        <p class="desc">Projetos e execuções elétricas de baixa e média tensão, com laudos e adequação às normas vigentes.</p>
+        <span class="name">Instalações elétricas (teste)</span>
+        <p class="desc">⚠️ Texto de exemplo para teste. Não representa um serviço real oferecido por qualquer empresa.</p>
         <div class="service-thumb-mobile"><img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=900&q=80" loading="lazy"></div>
       </div>
       <span class="arrow">→</span>
@@ -392,8 +406,8 @@
       <span class="ghost-num">03</span>
       <span class="num">03</span>
       <div>
-        <span class="name">Construção e reformas</span>
-        <p class="desc">Execução de obras residenciais, comerciais e industriais, do canteiro à entrega das chaves.</p>
+        <span class="name">Construção e reformas (teste)</span>
+        <p class="desc">⚠️ Texto de exemplo para teste. Não representa um serviço real oferecido por qualquer empresa.</p>
         <div class="service-thumb-mobile"><img src="https://images.unsplash.com/photo-1541976590-713941681591?w=900&q=80" loading="lazy"></div>
       </div>
       <span class="arrow">→</span>
@@ -403,8 +417,8 @@
       <span class="ghost-num">04</span>
       <span class="num">04</span>
       <div>
-        <span class="name">Poda e manutenção</span>
-        <p class="desc">Serviços de manutenção predial e paisagística, mantendo a segurança e a conservação dos espaços.</p>
+        <span class="name">Poda e manutenção (teste)</span>
+        <p class="desc">⚠️ Texto de exemplo para teste. Não representa um serviço real oferecido por qualquer empresa.</p>
         <div class="service-thumb-mobile"><img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=900&q=80" loading="lazy"></div>
       </div>
       <span class="arrow">→</span>
@@ -424,14 +438,14 @@
 <div class="wrap">
   <section class="section-pad" id="projetos">
     <div class="projects-head reveal-up">
-      <h2>Projetos<br>selecionados.</h2>
-      <span class="mono-label"><span class="status-dot"></span>Status / concluídos</span>
+      <h2>Projetos<br>fictícios (teste).</h2>
+      <span class="mono-label"><span class="status-dot"></span>⚠️ Exemplos de teste — não reais</span>
     </div>
 
     <div class="project-item">
       <div class="project-media"><img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1800&q=82" loading="lazy"></div>
       <div class="project-meta">
-        <div class="info"><div class="idx">Projeto — 01 · Residencial</div><div class="title">Residencial Santa Catarina</div></div>
+        <div class="info"><div class="idx">Projeto — 01 · Residencial (teste)</div><div class="title">Exemplo fictício — Residencial SC</div></div>
         <span class="year">2026</span>
       </div>
     </div>
@@ -439,7 +453,7 @@
     <div class="project-item">
       <div class="project-media"><img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1400&q=82" loading="lazy"></div>
       <div class="project-meta">
-        <div class="info"><div class="idx">Projeto — 02 · Industrial</div><div class="title">Galpão logístico São José</div></div>
+        <div class="info"><div class="idx">Projeto — 02 · Industrial (teste)</div><div class="title">Exemplo fictício — Galpão São José</div></div>
         <span class="year">2025</span>
       </div>
     </div>
@@ -447,7 +461,7 @@
     <div class="project-item">
       <div class="project-media"><img src="https://images.unsplash.com/photo-1493397212122-2b85dda8106b?w=1800&q=82" loading="lazy"></div>
       <div class="project-meta">
-        <div class="info"><div class="idx">Projeto — 03 · Comercial</div><div class="title">Centro empresarial Norte</div></div>
+        <div class="info"><div class="idx">Projeto — 03 · Comercial (teste)</div><div class="title">Exemplo fictício — Centro empresarial Norte</div></div>
         <span class="year">2025</span>
       </div>
     </div>
@@ -456,18 +470,17 @@
 
 <footer id="contato">
   <div class="wrap">
-    <h2 class="cta-title reveal-up" style="padding:0;">Vamos<br>construir<br>algo?</h2>
-    <a href="mailto:contato@ldengenharia.com.br" class="cta-link reveal-up">Iniciar conversa →</a>
+    <h2 class="cta-title reveal-up" style="padding:0;">Isto é<br>apenas<br>teste.</h2>
+    <p style="padding:0 48px; max-width:520px; color:#5a5a55; font-size:0.95rem; line-height:1.6;">⚠️ Este site não é real. Foi criado exclusivamente para fins de teste/demonstração. Nenhum contato, e-mail ou dado abaixo pertence a uma empresa verdadeira.</p>
+    <a href="mailto:teste@exemplo.com.br" class="cta-link reveal-up">Isto é um site de teste →</a>
   </div>
   <div class="footer-bottom">
     <div class="footer-col">
-      <div class="title">LD Engenharia e Serviços</div>
-      <div class="sub">Santa Catarina — Brasil</div>
+      <div class="title">⚠️ SITE DE TESTE</div>
+      <div class="sub">Não é uma empresa real — Santa Catarina, Brasil</div>
     </div>
     <div class="footer-links">
-      <a href="#">Instagram</a>
-      <a href="#">WhatsApp</a>
-      <a href="#">Email</a>
+      <span>Este é um site de teste</span>
     </div>
   </div>
 </footer>
